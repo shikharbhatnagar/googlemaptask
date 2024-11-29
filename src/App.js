@@ -1,6 +1,4 @@
-import logo from './logo.svg';
-import './App.css';
-import GoogleMapComponent from './components/MapComponent';
+import GoogleMapComponent from './components/GMapComponent';
 
 function App() {
   return (
