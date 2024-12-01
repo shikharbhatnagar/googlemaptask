@@ -3,32 +3,32 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import axios from "axios";
 
 const GMapComponent = () => {
-  const [gpsposition, setGPSPosition] = useState({ lat: 37.7749, lng: -122.4194, });
+  const [gpsposition, setGPSPosition] = useState({ lat: 26, lng: 78 });
   const [isSaving, setIsSaving] = useState(false);
 
-  const { isMapLoaded } = useJsApiLoader({
-    googleMapsApiKey: "SIzaSyDnLQWEOYj5zprJxQaNaEc-wLfCdQf2KZUS",
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: "SIzaSyBLOE1l5GixE9JwP66FqWWtuVpc6E6QzgoS",
   });
-  
-  const handleGMapClick = useCallback((event) => {
+
+  const handleMapClick = useCallback((event) => {
     setGPSPosition({
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
     });
   }, []);
 
-  const saveGPSLocation = async () => {
+  const saveLocation = async () => {
     setIsSaving(true);
     try {
       const api_response = await axios.post("http://localhost/shikhar/googlemaptask/save-location.php", gpsposition);
-      alert(api_response.message);
+      alert(api_response.message || "Location saved successfully!");
     } catch (error) {
-      alert(error.error);
+      alert("Failed to save location. Please try again.");
     }
     setIsSaving(false);
   };
 
-  if (!isMapLoaded) return <div>Loadings...</div>;
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <div>
@@ -36,16 +36,16 @@ const GMapComponent = () => {
         center={gpsposition}
         zoom={10}
         mapContainerStyle={{ width: "100%", height: "400px" }}
-        onClick={handleGMapClick}
+        onClick={handleMapClick}
       >
         <Marker position={gpsposition} />
       </GoogleMap>
       <div style={{ marginTop: "10px" }}>
         <p>
-          You Selected (Lat,Log): {gpsposition.lat}, {gpsposition.lng}
+          Selected Location: Latitude: {gpsposition.lat}, Longitude: {gpsposition.lng}
         </p>
-        <button onClick={saveGPSLocation} disabled={isSaving}>
-          {isSaving ? "Saving..." : "Save GPS Location"}
+        <button onClick={saveLocation} disabled={isSaving}>
+          {isSaving ? "Saving..." : "Save Location"}
         </button>
       </div>
     </div>
